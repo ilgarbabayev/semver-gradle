@@ -1,0 +1,38 @@
+name: CI DEV
+on:
+  push:
+    branches:
+      - dev
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+        
+      - name: Semantic Versioning
+        id: versioning
+        uses: paulhatch/semantic-version@v4.0.3
+        with:
+          tag_prefix: "v"
+          short_tags: false
+          major_pattern: "/^BREAKING CHANGE:/"
+          minor_pattern: "/^feat:/"
+          format: "${major}.${minor}.${patch}"
+
+      - name: Print Output
+        run: echo 'version is ${{ steps.versioning.outputs.version }}  \n  tag version is ${{ steps.versioning.outputs.version_tag }}'
+
+      - name: Create Tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{steps.versioning.outputs.version_tag}}',
+              sha: context.sha
+            })
