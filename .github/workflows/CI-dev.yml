@@ -22,10 +22,10 @@ jobs:
         uses: paulhatch/semantic-version@v5.0.0-alpha2
         with:
           tag_prefix: "v"
-          short_tags: false
+#          short_tags: false
           major_pattern: "/^BREAKING CHANGE:/"
           minor_pattern: "/^feat:/"
-          format: "${major}.${minor}.${patch}"
+          version_format: "${major}.${minor}.${patch}"
 
       - name: Print Output
         run: echo 'version is ${{ steps.versioning.outputs.version }}  \n  tag version is ${{ steps.versioning.outputs.version_tag }}'
