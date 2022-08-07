@@ -13,7 +13,10 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-        
+
+      - name: Print Tags
+        run: git tag
+
       - name: Semantic Versioning
         id: versioning
         uses: paulhatch/semantic-version@v4.0.3
