@@ -21,7 +21,6 @@ jobs:
         id: versioning
         uses: paulhatch/semantic-version@v4.0.3
         with:
-          branch: dev
           tag_prefix: "v"
           short_tags: false
           major_pattern: "/^BREAKING CHANGE:/"
