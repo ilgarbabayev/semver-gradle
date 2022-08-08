@@ -26,17 +26,11 @@ jobs:
           minor_pattern: "/^feat:/"
           format: "${major}.${minor}.${patch}"
 
-      - name: Hello world action
-        with:
-          super_secret: ${{ secrets.TEST_SECRET }}
-
       - name: Print Secret
-        run: echo ' secret is  ${{  secrets.TEST_SECRET }}  and with input "$super_secret"'
+        run: echo ' secret is  ${{  secrets.TEST_SECRET }}'
 
       - name: Print Output
         run: echo 'dev version is ${{ steps.versioning.outputs.version }}  \n  tag version is ${{ steps.versioning.outputs.version_tag }}'
-
-
 
       - name: Create Tag
         uses: actions/github-script@v5
