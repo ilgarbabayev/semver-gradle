@@ -7,29 +7,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Print Tags
-        run: git tag
 
       - name: Semantic Versioning
         id: versioning
         uses: paulhatch/semantic-version@v4.0.3
         with:
           tag_prefix: "v"
-
-          major_pattern: "BREAKING CHANGE:"
-          minor_pattern: "feat:"
-          format: "${major}.${minor}.${patch}-prerelease.${increment}"
+          short_tags: false
+          major_pattern: "/^BREAKING CHANGE:/"
+          minor_pattern: "/^feat:/"
+          format: "${major}.${minor}.${patch}"
 
       - name: Print Output
-        run: echo 'version is ${{ steps.versioning.outputs.version }}  \n  tag version is ${{ steps.versioning.outputs.version_tag }}'
+        run: echo 'dev version is ${{ steps.versioning.outputs.version }}  \n  tag version is ${{ steps.versioning.outputs.version_tag }}'
 
       - name: Create Tag
         uses: actions/github-script@v5
@@ -38,7 +33,7 @@ jobs:
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/${{ steps.versioning.outputs.version }}',
+              ref: 'refs/tags/${{steps.versioning.outputs.version_tag}}',
               sha: context.sha
             })
 
