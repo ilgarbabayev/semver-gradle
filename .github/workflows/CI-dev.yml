@@ -26,7 +26,7 @@ jobs:
           short_tags: false
           major_pattern: "/^BREAKING CHANGE:/"
           minor_pattern: "/^feat:/"
-          version_format: "${major}.${minor}.${patch}"
+          format: "${major}.${minor}.${patch}"
 
       - name: Print Output
         run: echo 'version is ${{ steps.versioning.outputs.version }}  \n  tag version is ${{ steps.versioning.outputs.version_tag }}'
