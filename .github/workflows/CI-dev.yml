@@ -12,16 +12,21 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-        
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print Tags
+        run: git tag
+
       - name: Semantic Versioning
         id: versioning
         uses: paulhatch/semantic-version@v4.0.3
         with:
+          branch: dev
           tag_prefix: "v"
           short_tags: false
           major_pattern: "/^BREAKING CHANGE:/"
           minor_pattern: "/^feat:/"
-          format: "${major}.${minor}.${patch}"
+          version_format: "${major}.${minor}.${patch}"
 
       - name: Print Output
         run: echo 'version is ${{ steps.versioning.outputs.version }}  \n  tag version is ${{ steps.versioning.outputs.version_tag }}'
@@ -40,14 +45,17 @@ jobs:
 #      - name: Setup Gradle
 #        uses: gradle/gradle-build-action@v2
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Execute Gradle set version
         run: ./gradlew -Dversion.semver=${{steps.versioning.outputs.version}}
 
       - name: Commit and Push
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git commit -m "update semantic version" -a
-          git push
+          git push origin HEAD:${{ github.ref }}
 
 
